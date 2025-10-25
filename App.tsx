@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import type { School, Filters, GroundingChunk, ResourceArticle } from './types';
 import { findSchools, getResources } from './services/geminiService';
+import { enrichSchoolsWithCSVData, loadCSVSchools, searchLocalSchools } from './services/csvDataService';
 import { SchoolCard } from './components/SchoolCard';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { FilterSidebar } from './components/FilterSidebar';
@@ -9,40 +10,73 @@ import { ComparisonView } from './components/ComparisonView';
 import { QuickFilters } from './components/QuickFilters';
 import { EmptyState } from './components/EmptyState';
 import { SchoolListSkeleton } from './components/LoadingSkeleton';
+import { Footer } from './components/Footer';
 import { SearchIcon, LocationMarkerIcon, HeartIcon, SortIcon, MapIcon, GridIcon, FilterIcon } from './components/icons';
 import { filterSchools, sortSchools, getDefaultFilters, type SortOption } from './utils/schoolHelpers';
 import { loadBookmarks, saveBookmarks } from './utils/storage';
 
-const Header: React.FC<{ onResourcesClick: () => void; bookmarkCount: number; onBookmarksClick: () => void }> = ({ 
+const Header: React.FC<{ 
+  onResourcesClick: () => void; 
+  bookmarkCount: number; 
+  onBookmarksClick: () => void;
+  useOnlineData: boolean;
+  onToggleDataSource: () => void;
+}> = ({ 
   onResourcesClick, 
   bookmarkCount, 
-  onBookmarksClick 
+  onBookmarksClick,
+  useOnlineData,
+  onToggleDataSource
 }) => (
     <header className="bg-gradient-to-r from-brand-800 to-brand-900 shadow-lg sticky top-0 z-40 border-b-2 border-brand-700">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div>
-                <h1 className="text-2xl font-bold text-white tracking-tight">SA Special Needs School Finder</h1>
-                <p className="text-brand-200 text-sm">Find the perfect school for your child in South Africa</p>
+        <div className="container mx-auto px-4 py-4">
+            <div className="flex justify-between items-center">
+                <div>
+                    <h1 className="text-2xl font-bold text-white tracking-tight">School Search</h1>
+                    <p className="text-brand-200 text-sm">Find the perfect school for your child in South Africa</p>
+                </div>
+                <div className="flex gap-3">
+                    <button 
+                        onClick={onBookmarksClick} 
+                        className="relative text-white font-semibold hover:bg-brand-700 px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 hover:scale-105"
+                    >
+                        <HeartIcon className="w-5 h-5" filled={bookmarkCount > 0} />
+                        <span className="hidden md:inline">Bookmarks</span>
+                        {bookmarkCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                {bookmarkCount}
+                            </span>
+                        )}
+                    </button>
+                    <button 
+                        onClick={onResourcesClick} 
+                        className="text-white font-semibold hover:bg-brand-700 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                    >
+                        Resource Library
+                    </button>
+                </div>
             </div>
-            <div className="flex gap-3">
-                <button 
-                    onClick={onBookmarksClick} 
-                    className="relative text-white font-semibold hover:bg-brand-700 px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 hover:scale-105"
+            <div className="mt-3 flex items-center gap-2 text-sm">
+                <span className={`text-brand-200 transition-colors ${!useOnlineData ? 'font-semibold text-white' : ''}`}>
+                    Local Data
+                </span>
+                <button
+                    onClick={onToggleDataSource}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 ${
+                        useOnlineData ? 'bg-green-500' : 'bg-gray-400'
+                    }`}
+                    role="switch"
+                    aria-checked={useOnlineData}
                 >
-                    <HeartIcon className="w-5 h-5" filled={bookmarkCount > 0} />
-                    <span className="hidden md:inline">Bookmarks</span>
-                    {bookmarkCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                            {bookmarkCount}
-                        </span>
-                    )}
+                    <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            useOnlineData ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                    />
                 </button>
-                <button 
-                    onClick={onResourcesClick} 
-                    className="text-white font-semibold hover:bg-brand-700 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-                >
-                    Resource Library
-                </button>
+                <span className={`text-brand-200 transition-colors ${useOnlineData ? 'font-semibold text-white' : ''}`}>
+                    Online Search
+                </span>
             </div>
         </div>
     </header>
@@ -153,9 +187,27 @@ export default function App() {
   const [prompt, setPrompt] = useState('Schools for a Grade 3 student with potential ADHD');
   const [locationQuery, setLocationQuery] = useState('Parklands, Cape Town, South Africa');
   const [schools, setSchools] = useState<School[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [groundingChunks, setGroundingChunks] = useState<GroundingChunk[]>([]);
+  const [useOnlineData, setUseOnlineData] = useState(false);
+  
+  // Load CSV schools on initial mount
+  useEffect(() => {
+    const loadInitialSchools = async () => {
+      try {
+        const csvSchools = await loadCSVSchools();
+        setSchools(csvSchools);
+      } catch (err) {
+        console.error('Failed to load initial schools:', err);
+        setError('Failed to load schools. Please try searching.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadInitialSchools();
+  }, []);
   
   // UI state
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
@@ -171,8 +223,13 @@ export default function App() {
   const [sortBy, setSortBy] = useState<SortOption>('rating');
 
   const handleSearch = async () => {
-    if (!prompt || !locationQuery) {
-      setError("Please enter a search query and a location.");
+    if (!prompt) {
+      setError("Please enter a search query.");
+      return;
+    }
+
+    if (useOnlineData && !locationQuery) {
+      setError("Please enter a location for online search.");
       return;
     }
 
@@ -182,14 +239,34 @@ export default function App() {
     setGroundingChunks([]);
 
     try {
-      const { schools: foundSchools, groundingChunks: chunks } = await findSchools(prompt, locationQuery);
-      setSchools(foundSchools || []);
-      setGroundingChunks(chunks || []);
-      if (!foundSchools || foundSchools.length === 0) {
+      if (useOnlineData) {
+        // Use Gemini AI search for online data
+        const { schools: foundSchools, groundingChunks: chunks } = await findSchools(prompt, locationQuery);
+        
+        if (!foundSchools || foundSchools.length === 0) {
           setError("No schools found. Try a different search query or location.");
+          setSchools([]);
+          setGroundingChunks([]);
+        } else {
+          // Enrich the AI results with CSV data (fees, contact info, etc.)
+          const enrichedSchools = await enrichSchoolsWithCSVData(foundSchools);
+          setSchools(enrichedSchools);
+          setGroundingChunks(chunks || []);
+        }
+      } else {
+        // Use local CSV data only
+        const localSchools = await searchLocalSchools(prompt);
+        
+        if (localSchools.length === 0) {
+          setError("No schools found in local database. Try different search terms or enable online search.");
+          setSchools([]);
+        } else {
+          setSchools(localSchools);
+        }
+        setGroundingChunks([]);
       }
     } catch (err) {
-      setError("An error occurred while searching for schools. Please try again.");
+      setError(`An error occurred while searching for schools. Please try again. ${useOnlineData ? '' : 'Try enabling online search for more results.'}`);
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -285,6 +362,8 @@ export default function App() {
         onResourcesClick={() => setIsResourcesOpen(true)} 
         bookmarkCount={bookmarkedIds.size}
         onBookmarksClick={() => setShowBookmarksOnly(!showBookmarksOnly)}
+        useOnlineData={useOnlineData}
+        onToggleDataSource={() => setUseOnlineData(!useOnlineData)}
       />
       
       <main className="container mx-auto p-4 md:p-6">
@@ -292,7 +371,12 @@ export default function App() {
         <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200 mb-6">
           <div className="text-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Find the Right School for Your Child</h2>
-            <p className="text-gray-600">Discover special needs-friendly schools across South Africa with real fees and verified information.</p>
+            <p className="text-gray-600">
+              {useOnlineData 
+                ? 'Discover special needs-friendly schools across South Africa with AI-powered search.'
+                : 'Search our curated database of 15 verified schools with complete fee information.'
+              }
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
             <div className="relative md:col-span-2">
@@ -305,7 +389,7 @@ export default function App() {
                   type="text"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="e.g., Montessori with speech therapy"
+                  placeholder={useOnlineData ? "e.g., Montessori with speech therapy" : "e.g., ADHD support, autism, remedial"}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
@@ -314,7 +398,7 @@ export default function App() {
             </div>
             <div className="relative md:col-span-2">
               <label htmlFor="location-input" className="block text-sm font-semibold text-gray-700 mb-2">
-                Location
+                Location {!useOnlineData && <span className="text-gray-400 text-xs">(optional for local search)</span>}
               </label>
               <div className="relative">
                 <input
@@ -322,9 +406,10 @@ export default function App() {
                   type="text"
                   value={locationQuery}
                   onChange={(e) => setLocationQuery(e.target.value)}
-                  placeholder="e.g., Sandton, Johannesburg or Cape Town"
+                  placeholder="e.g., Parklands, Cape Town"
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  disabled={!useOnlineData}
                 />
                 <LocationMarkerIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
@@ -414,6 +499,7 @@ export default function App() {
                     className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
                   >
                     <option value="rating">Highest Rated</option>
+                    <option value="distance">Nearest First</option>
                     <option value="tuition-low">Tuition: Low to High</option>
                     <option value="tuition-high">Tuition: High to Low</option>
                     <option value="class-size">Smallest Class Size</option>
@@ -504,6 +590,8 @@ export default function App() {
           onClearFilters={handleClearFilters}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

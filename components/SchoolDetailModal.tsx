@@ -25,25 +25,8 @@ const InfoPill: React.FC<{ label: string, value: string | number | boolean }> = 
     );
 };
 
-const TestimonialCard: React.FC<{ testimonial: ParentTestimonial }> = ({ testimonial }) => (
-    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-        <div className="flex items-center mb-2">
-            {[...Array(5)].map((_, i) => (
-                <StarIcon key={i} filled={i < testimonial.rating} className="w-4 h-4 text-yellow-400" />
-            ))}
-             <p className="ml-2 font-bold text-sm text-gray-800">{testimonial.author}</p>
-        </div>
-        <p className="text-gray-600 text-sm italic">"{testimonial.text}"</p>
-    </div>
-);
-
-
 export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, onClose }) => {
   if (!school) return null;
-
-  const avgRating = school.parent_testimonials.length > 0
-    ? school.parent_testimonials.reduce((acc, t) => acc + t.rating, 0) / school.parent_testimonials.length
-    : 0;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 backdrop-blur-sm" onClick={onClose}>
@@ -57,17 +40,6 @@ export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, on
                     <LocationMarkerIcon className="w-4 h-4 mr-1" />
                     <span>{school.address}</span>
                 </div>
-                {avgRating > 0 && (
-                  <div className="flex items-center mt-3 gap-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} filled={i < Math.round(avgRating)} className="w-5 h-5 text-yellow-300" />
-                      ))}
-                    </div>
-                    <span className="text-white font-semibold">{avgRating.toFixed(1)}</span>
-                    <span className="text-white/70 text-sm">({school.parent_testimonials.length} reviews)</span>
-                  </div>
-                )}
             </div>
             <button 
               onClick={onClose} 
@@ -87,16 +59,36 @@ export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, on
 
             <DetailSection title="Key Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <InfoPill label="Tuition Range" value={school.tuition_range} />
+                    {school.tuition_range && school.tuition_range.trim() !== '' && (
+                      <InfoPill label="Tuition Range" value={school.tuition_range} />
+                    )}
                     <InfoPill label="Avg. Class Size" value={school.average_class_size} />
                     <InfoPill label="Enrollment Status" value={school.enrollment_status} />
                     <InfoPill label="Educational Approach" value={school.educational_approach} />
                 </div>
+                {school.fee_pdf_url && (
+                  <div className="mt-4">
+                    <a 
+                      href={school.fee_pdf_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 bg-green-100 text-green-800 font-semibold py-2 px-4 rounded-lg hover:bg-green-200 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                      </svg>
+                      View Fee Structure (PDF)
+                    </a>
+                  </div>
+                )}
             </DetailSection>
 
              <DetailSection title="Special Needs Support">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <InfoPill label="ADHD Support" value={school.adhd_support} />
+                    {school.autism_support !== undefined && (
+                      <InfoPill label="Autism Support" value={school.autism_support} />
+                    )}
                     <InfoPill label="Offers IEP" value={school.offers_iep} />
                     <InfoPill label="On-site Therapists" value={school.has_on_site_therapists} />
                     <InfoPill label="Sensory-Friendly Facilities" value={school.has_sensory_friendly_facilities} />
@@ -111,20 +103,35 @@ export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, on
                 </div>
             </DetailSection>
 
-            <DetailSection title="Parent Testimonials">
-                <div className="space-y-4">
-                    {school.parent_testimonials.length > 0 ? (
-                        school.parent_testimonials.map((t, i) => <TestimonialCard key={i} testimonial={t} />)
-                    ) : (
-                        <p className="text-gray-500">No testimonials available yet.</p>
-                    )}
-                </div>
-            </DetailSection>
-
              <DetailSection title="Contact & More Info">
-                 <div className="flex space-x-4">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                   {school.phone_number && (
+                     <div className="flex items-center gap-2 text-sm">
+                       <span className="font-semibold text-gray-600">Phone:</span>
+                       <a href={`tel:${school.phone_number}`} className="text-brand-600 hover:underline">{school.phone_number}</a>
+                     </div>
+                   )}
+                   {school.email && (
+                     <div className="flex items-center gap-2 text-sm">
+                       <span className="font-semibold text-gray-600">Email:</span>
+                       <a href={`mailto:${school.email}`} className="text-brand-600 hover:underline">{school.email}</a>
+                     </div>
+                   )}
+                   {school.distance_km !== undefined && (
+                     <div className="flex items-center gap-2 text-sm">
+                       <span className="font-semibold text-gray-600">Distance:</span>
+                       <span className="text-gray-800">{school.distance_km === 0 ? 'In Parklands' : `${school.distance_km} km from Parklands`}</span>
+                     </div>
+                   )}
+                 </div>
+                 <div className="flex flex-col sm:flex-row gap-3">
                     <a href={school.website} target="_blank" rel="noopener noreferrer" className="flex-1 text-center bg-brand-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-700 transition-colors">Visit Website</a>
-                    <a href={`tel:${school.phone_number}`} className="flex-1 text-center bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors">Call School</a>
+                    {school.phone_number && (
+                      <a href={`tel:${school.phone_number}`} className="flex-1 text-center bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors">Call School</a>
+                    )}
+                    {school.email && (
+                      <a href={`mailto:${school.email}`} className="flex-1 text-center bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors">Email School</a>
+                    )}
                  </div>
             </DetailSection>
         </div>

@@ -50,7 +50,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Tuition Range */}
       <div className="mb-6 pb-6 border-b border-gray-200">
         <label className="block text-sm font-semibold text-gray-700 mb-3">
-          Annual Tuition (Rands)
+          Monthly Tuition (Rands)
         </label>
         <div className="space-y-3">
           <div>
@@ -58,8 +58,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <input
               type="range"
               min="0"
-              max="200000"
-              step="5000"
+              max="20000"
+              step="500"
               value={filters.tuition[0]}
               onChange={(e) => updateFilter('tuition', [Number(e.target.value), filters.tuition[1]])}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
@@ -70,8 +70,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <input
               type="range"
               min="0"
-              max="200000"
-              step="5000"
+              max="20000"
+              step="500"
               value={filters.tuition[1]}
               onChange={(e) => updateFilter('tuition', [filters.tuition[0], Number(e.target.value)])}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"

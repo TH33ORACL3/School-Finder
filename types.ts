@@ -4,9 +4,13 @@ export interface School {
   address: string;
   website: string;
   phone_number: string;
+  email?: string;
   tuition_range: string;
+  fee_pdf_url?: string;
+  distance_km?: number;
   special_needs_programs: string[];
   adhd_support: boolean;
+  autism_support?: boolean;
   average_class_size: number;
   has_on_site_therapists: boolean;
   offers_iep: boolean;

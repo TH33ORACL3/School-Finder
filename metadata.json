@@ -1,5 +1,5 @@
 {
-  "name": "Special Needs School Finder",
+  "name": "School Search",
   "description": "A comprehensive web application for parents to find special needs-friendly schools, featuring advanced filtering, detailed school profiles, and an interactive map. Powered by Gemini for up-to-date and relevant school information.",
   "requestFramePermissions": [
     "geolocation"

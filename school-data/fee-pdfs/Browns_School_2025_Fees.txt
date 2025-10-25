@@ -1,0 +1,48 @@
+THE BROWNS' SCHOOL - 2025 SCHOOL FEES
+=====================================
+Source: https://brownsschool.co.za/school-fees/
+Scraped: October 25, 2025
+
+STRUCTURE:
+
+PRIMARY & AUTISM 2-8 / SPECIAL NEEDS 1-6 (Gr 1-7)
+--------------------------------------------------
+- First child per annum: R23,900.00
+- Second child per annum: R22,705.00
+- Third child per annum: R21,510.00
+
+PRE-PRIMARY & AUTISM 1
+---------------------
+- First child per annum: R25,900.00
+- Second child per annum: R24,605.00
+- Third child per annum: R23,310.00
+
+PAYMENT OPTIONS:
+===============
+- Monthly: 10 x R2,390.00 (Gr 1-7) OR 10 x R2,590.00 (Pre-Primary)
+- Termly: 4 x R5,975.00 (Gr 1-7) OR 4 x R6,475.00 (Pre-Primary)
+
+EARLY PAYMENT DISCOUNT:
+======================
+5% rebate if full fees paid by February 28, 2025 or within 30 days of admission
+
+TRANSPORT FEES: (Reviewed quarterly based on fuel prices)
+=========================================================
+- SHORT TRIP (Malvern, Yellowwood Park): R1,530.00 per term
+- MEDIUM TRIP (Hillcrest, Newlands, Glenwood): R1,750.00 per term  
+- LONG TRIP (Durban North, Amanzimtoti): R2,000.00 per term
+
+MINIMUM PAYMENT:
+===============
+All parents must pay minimum R2,000 per learner annually regardless of remission qualification
+
+BANKING DETAILS:
+===============
+Bank: First National Bank - Pinetown
+Branch Code: 22 16 26
+Account Number: 50810234787
+Reference: Admission number, S/Fees
+
+LOCATION: Tokai, Cape Town (Durban area references for transport)
+GRADES: Pre-Primary to Grade 7, Autism programs, Special Needs programs
+

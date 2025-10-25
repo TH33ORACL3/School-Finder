@@ -1,0 +1,61 @@
+TAFELBERG REMEDIAL SCHOOL - FEE RESEARCH NOTES
+===============================================
+Scraped: October 25, 2025
+Sources: https://www.tafelbergschool.co.za/ and newsletter references
+
+FINDING:
+========
+⚠️ OUTDATED FEE INFORMATION FOUND (2021)
+
+Website Scraping Results:
+- Main website: No current fee information displayed
+- Newsletter 2021 PDF: Found historical fees (Grade 3-5: R23,100/year in 2021)
+- No 2025 fee structure available publicly
+
+Historical Fee Information (2021):
+===================================
+Grade 3-5: R23,100 per annum (2021)
+Monthly: R2,100 (paid over 11 months)
+
+⚠️ NOTE: This data is 4 years old and NOT suitable for 2025 pricing
+
+School Information Found:
+=========================
+- Name: Tafelberg Remedial School
+- Address: Van der Schijff Drive, Bothasig, Cape Town, 7441
+- Phone: 021 300 3366 (NEW NUMBER)
+- Old Phone: 021 558 2405
+- Email: secretary@tafelbergschool.co.za, principal@tafelbergschool.co.za
+- Website: https://www.tafelbergschool.co.za/
+
+Grade Range: Grade 1 to Grade 12
+
+School Type:
+- Public School
+- Section 21 fee-paying school
+- English medium
+- Remedial education
+
+Features:
+- Resource Centre
+- E-Learning programs
+- Therapy services (on-site)
+- Sports programs
+- Comprehensive support services
+
+Special Note:
+- Clubhouse bookings: bookingstbs@gmail.com
+- Stationery lists available on website
+- School policies available on website
+
+RECOMMENDATION:
+===============
+Contact school directly for current 2025 Grade 3 fee information:
+📞 021 300 3366 (NEW NUMBER)
+📧 secretary@tafelbergschool.co.za
+
+Historical 2021 fees should NOT be used for 2025 estimates.
+Likely increased significantly over 4 years.
+
+CSV STATUS: Remains "Contact for fees" - accurate and honest data
+

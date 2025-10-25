@@ -1,0 +1,46 @@
+KENSIO HOUSE THERAPEUTIC ACADEMY - FEE RESEARCH NOTES
+=====================================================
+Scraped: October 25, 2025
+Sources: https://kensiohouse.co.za/ and https://kensiohouse.co.za/enrol-kensio-house/
+
+FINDING:
+========
+❌ NO PUBLIC FEE INFORMATION AVAILABLE
+
+Website Scraping Results:
+- Main website: No fee structure published
+- Enrollment page: No fee information displayed
+- Search results: No fee PDFs or public pricing
+
+School Information Found:
+=========================
+- Name: Kensio House Therapeutic Academy
+- Address: Corner Dorothea Drive and Cedar Crescent, Parklands, Cape Town
+- Phone: 021 879 9905
+- Email: admin@kensiohouse.co.za
+- Website: https://kensiohouse.co.za/
+- Enrollment: https://sis.genexinstitute.com/apply/kensio-house
+
+Grade Range: Grade R - 12 + AEP (Alternative Education Pathway)
+
+Curriculum:
+- Cambridge-accredited school
+- Cambridge curriculum for academic track
+- Alternative Education Pathway (AEP) for vocational pathways
+- Vocational exploration and exits available
+
+Specialization:
+- High-functioning neurodiverse learners
+- Barriers to learning: Dyslexia, Dysgraphia, Dyscalculia, ADD/ADHD, Anxiety
+- Therapeutic methods and personalised approaches
+- Smaller classes
+- Sensory management strategies
+
+RECOMMENDATION:
+===============
+Contact school directly for Grade 3 fee information:
+📞 021 879 9905
+📧 admin@kensiohouse.co.za
+
+CSV STATUS: Remains "Contact for fees" - accurate and honest data
+

@@ -1,7 +1,6 @@
 import React from 'react';
 import type { School } from '../types';
-import { LocationMarkerIcon, BookmarkIcon, CompareIcon, StarIcon } from './icons';
-import { getAverageRating } from '../utils/schoolHelpers';
+import { LocationMarkerIcon, BookmarkIcon, CompareIcon } from './icons';
 
 interface SchoolCardProps {
   school: School;
@@ -11,14 +10,6 @@ interface SchoolCardProps {
   isBookmarked: boolean;
   isComparing: boolean;
 }
-
-const Rating: React.FC<{ rating: number }> = ({ rating }) => (
-  <div className="flex items-center">
-    {[...Array(5)].map((_, i) => (
-      <StarIcon key={i} filled={i < rating} className="text-yellow-400 w-4 h-4" />
-    ))}
-  </div>
-);
 
 const EnrollmentBadge: React.FC<{ status: 'Open' | 'Waitlist' | 'Closed' }> = ({ status }) => {
   const colors = {
@@ -35,8 +26,6 @@ const EnrollmentBadge: React.FC<{ status: 'Open' | 'Waitlist' | 'Closed' }> = ({
 };
 
 export const SchoolCard: React.FC<SchoolCardProps> = ({ school, onSelect, onBookmark, onCompare, isBookmarked, isComparing }) => {
-  const avgRating = getAverageRating(school);
-
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100 hover:border-brand-200">
       {/* Header with gradient overlay */}
@@ -48,6 +37,13 @@ export const SchoolCard: React.FC<SchoolCardProps> = ({ school, onSelect, onBook
               <LocationMarkerIcon className="w-4 h-4 mr-1 flex-shrink-0" />
               <span className="line-clamp-1">{school.address}</span>
             </div>
+            {school.distance_km !== undefined && school.distance_km !== null && (
+              <div className="mt-1">
+                <span className="text-xs bg-white/20 text-white px-2 py-1 rounded-full font-semibold backdrop-blur-sm">
+                  {school.distance_km === 0 ? 'In Parklands' : `${school.distance_km} km away`}
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex items-center space-x-2 flex-shrink-0">
             <button 
@@ -80,15 +76,9 @@ export const SchoolCard: React.FC<SchoolCardProps> = ({ school, onSelect, onBook
       <div className="p-5 flex-grow -mt-12 relative z-10">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
           <div className="flex items-center justify-between mb-3">
-            {avgRating > 0 ? (
-              <div className="flex items-center gap-2">
-                <Rating rating={Math.round(avgRating)} />
-                <span className="text-sm font-semibold text-gray-700">{avgRating.toFixed(1)}</span>
-                <span className="text-xs text-gray-500">({school.parent_testimonials.length})</span>
-              </div>
-            ) : (
-              <span className="text-sm text-gray-500">No reviews yet</span>
-            )}
+            <div className="text-sm text-gray-600">
+              <span className="font-semibold">Enrollment:</span>
+            </div>
             <EnrollmentBadge status={school.enrollment_status} />
           </div>
           
@@ -123,16 +113,47 @@ export const SchoolCard: React.FC<SchoolCardProps> = ({ school, onSelect, onBook
           )}
         </div>
 
-        <div className="text-sm text-gray-600 mb-1">
+        <div className="text-sm text-gray-600 mb-3">
           <span className="font-semibold">Approach:</span> {school.educational_approach}
         </div>
+
+        {(school.phone_number || school.email) && (
+          <div className="text-xs text-gray-600 space-y-1 border-t pt-3">
+            {school.phone_number && (
+              <div>
+                <a 
+                  href={`tel:${school.phone_number}`} 
+                  className="text-brand-600 hover:text-brand-700 font-medium hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  📞 {school.phone_number}
+                </a>
+              </div>
+            )}
+            {school.email && (
+              <div>
+                <a 
+                  href={`mailto:${school.email}`} 
+                  className="text-brand-600 hover:text-brand-700 font-medium hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  ✉️ {school.email}
+                </a>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Footer */}
       <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 border-t border-gray-200 flex justify-between items-center">
-        <div>
+        <div className="flex-1">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Tuition</p>
-          <p className="text-lg font-bold text-brand-700">{school.tuition_range}</p>
+          {school.tuition_range && school.tuition_range.trim() !== '' ? (
+            <p className="text-lg font-bold text-brand-700">{school.tuition_range}</p>
+          ) : (
+            <p className="text-sm text-gray-400 italic">Fee info pending</p>
+          )}
         </div>
         <button 
           onClick={() => onSelect(school)} 

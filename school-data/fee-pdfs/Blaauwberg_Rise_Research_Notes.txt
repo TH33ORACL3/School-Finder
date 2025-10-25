@@ -1,0 +1,49 @@
+BLAAUWBERG RISE THERAPY & LEARNING CENTRE - FEE RESEARCH NOTES
+===============================================================
+Scraped: October 25, 2025
+Sources: http://www.blaauwbergacademy.co.za/ and https://www.rainbowkids.co.za/blaauwberg-rise-therapy.html
+
+FINDING:
+========
+❌ NO PUBLIC FEE INFORMATION AVAILABLE
+
+Website Scraping Results:
+- Main website (blaauwbergacademy.co.za): Website down (500 error)
+- Rainbow Kids listing: No fee information displayed
+- Search results: No fee PDFs or public pricing
+
+School Information Found:
+=========================
+- Name: Blaauwberg Rise Therapy & Learning Centre
+- Address: 7 Raven Street, Bloubergrant, 7441
+- Phone: 021 556 0931
+- Email: info@blaauwbergacademy.co.za
+- Website: http://www.blaauwbergacademy.co.za/ (currently down)
+- Facebook: facebook.com/BlaauwbergRiseAcademy
+
+Grade Range: 2 years to Grade 3
+
+History:
+- Opened in 2016
+- Started with 2-6 year olds with learning barriers and autism
+- Added registered WCED Gr R – Gr 3 facility in 2018
+
+Specialization:
+- Learning barriers
+- Autism spectrum disorder
+- Eureka Learning System (program developed by Dr. Lyn Thijsse)
+- Early intervention
+- Holistic approach
+- Special needs therapy
+
+Description:
+"A warm, loving and stimulating environment, offering a Holistic approach. We will focus on all aspects of your child's development."
+
+RECOMMENDATION:
+===============
+Contact school directly for Grade 3 fee information:
+📞 021 556 0931
+📧 info@blaauwbergacademy.co.za
+
+CSV STATUS: Remains "Contact for fees" - accurate and honest data
+

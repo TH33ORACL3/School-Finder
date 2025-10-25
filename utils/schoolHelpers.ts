@@ -57,7 +57,7 @@ export const filterSchools = (schools: School[], filters: Filters): School[] => 
   });
 };
 
-export type SortOption = 'rating' | 'tuition-low' | 'tuition-high' | 'class-size' | 'name';
+export type SortOption = 'rating' | 'distance' | 'tuition-low' | 'tuition-high' | 'class-size' | 'name';
 
 export const sortSchools = (schools: School[], sortBy: SortOption): School[] => {
   const sorted = [...schools];
@@ -65,6 +65,9 @@ export const sortSchools = (schools: School[], sortBy: SortOption): School[] => 
   switch (sortBy) {
     case 'rating':
       return sorted.sort((a, b) => getAverageRating(b) - getAverageRating(a));
+    
+    case 'distance':
+      return sorted.sort((a, b) => (a.distance_km || 999) - (b.distance_km || 999));
     
     case 'tuition-low':
       return sorted.sort((a, b) => parseTuitionRange(a.tuition_range) - parseTuitionRange(b.tuition_range));
@@ -84,7 +87,7 @@ export const sortSchools = (schools: School[], sortBy: SortOption): School[] => 
 };
 
 export const getDefaultFilters = (): Filters => ({
-  tuition: [0, 200000], // South African Rands range
+  tuition: [0, 20000], // Monthly tuition in South African Rands
   classSize: 30,
   adhdSupport: false,
   therapists: false,
