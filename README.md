@@ -60,10 +60,12 @@ A professional, feature-rich web application to help parents find the perfect sp
 
 3. **Set up your API key**
    
-   Create a `.env.local` file in the root directory:
+   Create a `.env` file in the root directory (this file is git-ignored for security):
    ```env
-   API_KEY=your_gemini_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
+   
+   **⚠️ SECURITY NOTE**: Never commit your `.env` file to version control. It contains sensitive API keys.
 
 4. **Run the development server**
    ```bash
@@ -197,13 +199,20 @@ School-Finder/
 
 ## 🔐 Environment Variables
 
-Create a `.env.local` file with:
+Create a `.env` file with:
 
 ```env
-API_KEY=your_gemini_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 Get your API key from [Google AI Studio](https://ai.google.dev/)
+
+### 🔒 Security Best Practices
+
+1. **Never commit `.env` files** - They are already in `.gitignore`
+2. **Use `.env.example`** - Template without actual secrets (safe to commit)
+3. **Rotate compromised keys** - If accidentally exposed, regenerate immediately at [Google AI Studio](https://ai.google.dev/)
+4. **Keep keys private** - Don't share in issues, screenshots, or documentation
 
 ## 📄 License
 
