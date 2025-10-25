@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Special Needs School Finder</title>
+    <title>SA Special Needs School Finder - Find Schools in South Africa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -24,10 +24,84 @@
                 900: '#1e469b',
               },
             },
+            animation: {
+              'fadeIn': 'fadeIn 0.3s ease-in-out',
+              'slideUp': 'slideUp 0.3s ease-out',
+              'scaleIn': 'scaleIn 0.2s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.95)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+            },
           }
         }
       }
     </script>
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { 
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to { 
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      .animate-slideUp {
+        animation: slideUp 0.3s ease-out;
+      }
+      .animate-scaleIn {
+        animation: scaleIn 0.2s ease-out;
+      }
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3c82e8;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2d6ad9;
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {

@@ -38,34 +38,55 @@ export const findSchools = async (prompt: string, locationQuery: string) => {
 
   const fullPrompt = `
     Query: "${prompt}"
-    Based on this query, find special needs-friendly schools in or near "${locationQuery}".
-    For each school found, provide the following information in a JSON array format inside a markdown code block.
-    Ensure the JSON is well-formed. Each object in the array should represent a school and have these properties:
-    - id: A unique string identifier.
-    - name: string
-    - address: string
-    - website: string (full URL)
-    - phone_number: string
-    - tuition_range: string (e.g., "$5k-$10k", "Varies")
-    - special_needs_programs: string[] (e.g., ["Autism Support", "Speech Therapy"])
-    - adhd_support: boolean
-    - average_class_size: number
-    - has_on_site_therapists: boolean
-    - offers_iep: boolean
-    - has_sensory_friendly_facilities: boolean
-    - educational_approach: string (e.g., "Montessori", "Remedial", "Mainstream Inclusion")
-    - brief_description: A short paragraph about the school's special needs support.
-    - parent_testimonials: An array of objects, each with 'author' (string), 'text' (string), and 'rating' (number from 1 to 5).
-    - enrollment_status: 'Open', 'Waitlist', or 'Closed'.
-    - lat: latitude coordinate (number)
-    - lng: longitude coordinate (number)
+    
+    INSTRUCTIONS:
+    1. Find special needs-friendly schools in or near "${locationQuery}" in SOUTH AFRICA using Google Maps.
+    2. Focus ONLY on schools located in South Africa.
+    3. For EACH school found, search the web for their official website to find:
+       - Current tuition fees and pricing in South African Rands (check "Fees", "Tuition", "Admissions", "Costs" pages)
+       - Special needs programs offered (check "Programs", "Support Services", "Special Education" sections)
+       - Contact information and enrollment details
+       - Therapist availability and educational approach
+    4. Use ONLY verified information from official sources. If you cannot find specific data, mark it as "Not Listed" or null.
+    5. For tuition_range, provide exact figures in RANDS if found (e.g., "R85,000 - R95,000 per year" or "R7,500 per month"). If not found, use "Contact School".
+    6. NEVER use dollars ($) - always use South African Rands (R).
+    
+    Return a JSON array with the following structure inside a markdown code block.
+    Each object should represent a school with these properties:
+    - id: A unique string identifier (use school name + address hash)
+    - name: string (official school name)
+    - address: string (full physical address with city and province)
+    - website: string (full URL to official website)
+    - phone_number: string (South African format contact number from website or Google Maps)
+    - tuition_range: string (ACTUAL fees in RANDS from website if available, otherwise "Contact School for Fees")
+    - special_needs_programs: string[] (programs explicitly mentioned on their website)
+    - adhd_support: boolean (true only if explicitly mentioned)
+    - average_class_size: number (from website if available, otherwise use typical value)
+    - has_on_site_therapists: boolean (true only if explicitly mentioned)
+    - offers_iep: boolean (true only if explicitly mentioned, or ISP - Individual Support Plan for SA context)
+    - has_sensory_friendly_facilities: boolean (true only if explicitly mentioned)
+    - educational_approach: string (e.g., "Montessori", "Remedial", "Mainstream Inclusion", "Waldorf", "CAPS-based")
+    - brief_description: A short paragraph about the school's special needs support based on website content
+    - parent_testimonials: An array of objects with 'author' (string), 'text' (string), and 'rating' (number 1-5)
+      (Use actual testimonials from their website if available, otherwise provide representative examples)
+    - enrollment_status: 'Open', 'Waitlist', or 'Closed' (based on website info or set to 'Open' if unknown)
+    - lat: latitude coordinate (number from Google Maps)
+    - lng: longitude coordinate (number from Google Maps)
+    
+    IMPORTANT: 
+    - Ground your response in actual web sources from South African schools only.
+    - All prices MUST be in South African Rands (R), never dollars ($).
+    - Prioritize accuracy over completeness.
   `;
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: fullPrompt,
     config: {
-      tools: [{ googleMaps: {} }],
+      tools: [
+        { googleMaps: {} },
+        { googleSearch: {} }
+      ],
     },
   });
 

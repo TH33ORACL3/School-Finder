@@ -41,19 +41,42 @@ const TestimonialCard: React.FC<{ testimonial: ParentTestimonial }> = ({ testimo
 export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, onClose }) => {
   if (!school) return null;
 
+  const avgRating = school.parent_testimonials.length > 0
+    ? school.parent_testimonials.reduce((acc, t) => acc + t.rating, 0) / school.parent_testimonials.length
+    : 0;
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 sticky top-0 bg-white border-b border-gray-200 z-10">
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+        {/* Header with Gradient */}
+        <div className="p-6 bg-gradient-to-r from-brand-600 to-brand-800 sticky top-0 z-10">
           <div className="flex justify-between items-start">
-            <div>
-                <h2 className="text-3xl font-bold text-brand-800">{school.name}</h2>
-                <div className="flex items-center text-sm text-gray-500 mt-1">
+            <div className="flex-1">
+                <h2 className="text-3xl font-bold text-white mb-2">{school.name}</h2>
+                <div className="flex items-center text-sm text-white/90">
                     <LocationMarkerIcon className="w-4 h-4 mr-1" />
                     <span>{school.address}</span>
                 </div>
+                {avgRating > 0 && (
+                  <div className="flex items-center mt-3 gap-2">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon key={i} filled={i < Math.round(avgRating)} className="w-5 h-5 text-yellow-300" />
+                      ))}
+                    </div>
+                    <span className="text-white font-semibold">{avgRating.toFixed(1)}</span>
+                    <span className="text-white/70 text-sm">({school.parent_testimonials.length} reviews)</span>
+                  </div>
+                )}
             </div>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            <button 
+              onClick={onClose} 
+              className="text-white hover:bg-white/20 rounded-full p-2 transition-all ml-4"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         </div>
         
