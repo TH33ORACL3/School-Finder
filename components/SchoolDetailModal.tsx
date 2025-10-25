@@ -57,30 +57,65 @@ export const SchoolDetailModal: React.FC<SchoolDetailModalProps> = ({ school, on
                 <p className="text-gray-700">{school.brief_description}</p>
             </DetailSection>
 
+            {/* Prominent Tuition Section */}
+            <DetailSection title="💰 Tuition Fees">
+                {school.tuition_range && school.tuition_range.trim() !== '' && !school.tuition_range.toLowerCase().includes('contact') ? (
+                  <div className="bg-gradient-to-r from-brand-50 to-brand-100 p-6 rounded-xl border-2 border-brand-200">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold text-brand-600 uppercase tracking-wide mb-2">
+                          Grade 3 Annual Fees
+                        </p>
+                        <p className="text-4xl font-extrabold text-brand-800 mb-2">
+                          {school.tuition_range.split('(')[0].trim()}
+                        </p>
+                        {school.tuition_range.includes('(') && (
+                          <p className="text-xl font-bold text-brand-600">
+                            {school.tuition_range.match(/\((.*?)\)/)?.[1]}
+                          </p>
+                        )}
+                      </div>
+                      {school.fee_pdf_url && (
+                        <a 
+                          href={school.fee_pdf_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 bg-brand-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-brand-700 transition-all shadow-md hover:shadow-lg"
+                        >
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                          </svg>
+                          View Full Fee Schedule
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-xs text-brand-700 mt-3 font-medium">
+                      ℹ️ Fees may vary by grade level. Click above to view complete fee structure including registration, deposits, and additional costs.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 p-6 rounded-xl border-2 border-gray-200">
+                    <p className="text-2xl font-bold text-gray-700 mb-2">
+                      {school.tuition_range && school.tuition_range.toLowerCase().includes('contact') 
+                        ? '📞 Contact School for Fee Information' 
+                        : 'Fee Information Not Available'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Please contact the school directly to discuss tuition fees and payment options.
+                    </p>
+                  </div>
+                )}
+            </DetailSection>
+
             <DetailSection title="Key Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {school.tuition_range && school.tuition_range.trim() !== '' && (
-                      <InfoPill label="Tuition Range" value={school.tuition_range} />
-                    )}
                     <InfoPill label="Avg. Class Size" value={school.average_class_size} />
                     <InfoPill label="Enrollment Status" value={school.enrollment_status} />
                     <InfoPill label="Educational Approach" value={school.educational_approach} />
+                    {school.distance_km !== undefined && school.distance_km !== null && (
+                      <InfoPill label="Distance from Parklands" value={`${school.distance_km} km`} />
+                    )}
                 </div>
-                {school.fee_pdf_url && (
-                  <div className="mt-4">
-                    <a 
-                      href={school.fee_pdf_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-green-100 text-green-800 font-semibold py-2 px-4 rounded-lg hover:bg-green-200 transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                      </svg>
-                      View Fee Structure (PDF)
-                    </a>
-                  </div>
-                )}
             </DetailSection>
 
              <DetailSection title="Special Needs Support">

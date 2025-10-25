@@ -145,21 +145,54 @@ export const SchoolCard: React.FC<SchoolCardProps> = ({ school, onSelect, onBook
         )}
       </div>
 
-      {/* Footer */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 border-t border-gray-200 flex justify-between items-center">
-        <div className="flex-1">
-          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Tuition</p>
-          {school.tuition_range && school.tuition_range.trim() !== '' ? (
-            <p className="text-lg font-bold text-brand-700">{school.tuition_range}</p>
+      {/* Footer with Prominent Tuition */}
+      <div className="bg-gradient-to-r from-brand-50 to-brand-100 p-4 border-t-2 border-brand-200">
+        <div className="mb-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-xs font-semibold text-brand-600 uppercase tracking-wider">
+              💰 Annual Tuition Fees
+            </p>
+            {school.fee_pdf_url && school.tuition_range && !school.tuition_range.toLowerCase().includes('contact') && (
+              <span className="text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
+                ✓ Verified
+              </span>
+            )}
+          </div>
+          {school.tuition_range && school.tuition_range.trim() !== '' && !school.tuition_range.toLowerCase().includes('contact') ? (
+            <div>
+              <p className="text-2xl font-extrabold text-brand-800 leading-tight mb-1">
+                {school.tuition_range.split('(')[0].trim()}
+              </p>
+              {school.tuition_range.includes('(') && (
+                <p className="text-sm font-semibold text-brand-600">
+                  {school.tuition_range.match(/\((.*?)\)/)?.[1]}
+                </p>
+              )}
+            </div>
           ) : (
-            <p className="text-sm text-gray-400 italic">Fee info pending</p>
+            <p className="text-lg font-bold text-gray-600 italic">
+              {school.tuition_range && school.tuition_range.toLowerCase().includes('contact') 
+                ? 'Contact School for Fees' 
+                : 'Fee info pending'}
+            </p>
+          )}
+          {school.fee_pdf_url && (
+            <a 
+              href={school.fee_pdf_url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block mt-2 text-xs text-brand-600 hover:text-brand-700 font-semibold hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              📄 View Full Fee Schedule →
+            </a>
           )}
         </div>
         <button 
           onClick={() => onSelect(school)} 
-          className="bg-brand-600 text-white font-bold py-2.5 px-5 rounded-lg hover:bg-brand-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          className="w-full bg-brand-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-brand-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
         >
-          View Details
+          View Full Details
         </button>
       </div>
     </div>
